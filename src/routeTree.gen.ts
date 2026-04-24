@@ -9,10 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiTasksRouteImport } from './routes/api/tasks'
 import { Route as ApiTasksIdRouteImport } from './routes/api/tasks.$id'
 
+const TasksRoute = TasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,35 +49,81 @@ const ApiTasksIdRoute = ApiTasksIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/tasks': typeof TasksRoute
   '/api/tasks': typeof ApiTasksRouteWithChildren
   '/api/tasks/$id': typeof ApiTasksIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/tasks': typeof TasksRoute
   '/api/tasks': typeof ApiTasksRouteWithChildren
   '/api/tasks/$id': typeof ApiTasksIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/tasks': typeof TasksRoute
   '/api/tasks': typeof ApiTasksRouteWithChildren
   '/api/tasks/$id': typeof ApiTasksIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/tasks' | '/api/tasks/$id'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/tasks'
+    | '/api/tasks'
+    | '/api/tasks/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/tasks' | '/api/tasks/$id'
-  id: '__root__' | '/' | '/api/tasks' | '/api/tasks/$id'
+  to: '/' | '/about' | '/contact' | '/tasks' | '/api/tasks' | '/api/tasks/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/tasks'
+    | '/api/tasks'
+    | '/api/tasks/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  TasksRoute: typeof TasksRoute
   ApiTasksRoute: typeof ApiTasksRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tasks': {
+      id: '/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof TasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -98,6 +162,9 @@ const ApiTasksRouteWithChildren = ApiTasksRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  TasksRoute: TasksRoute,
   ApiTasksRoute: ApiTasksRouteWithChildren,
 }
 export const routeTree = rootRouteImport

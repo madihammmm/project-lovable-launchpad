@@ -43,9 +43,7 @@ export function SiteLayout() {
           </nav>
         </div>
       </header>
-      <main className="flex-1">
-        <Outlet />
-      </main>
+      <main className="flex-1">{children}</main>
       <footer className="border-t border-border/60 py-8 text-center text-sm text-muted-foreground">
         © {new Date().getFullYear()} FlowBoard · Built with TanStack Start
       </footer>
