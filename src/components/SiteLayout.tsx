@@ -1,4 +1,5 @@
-import { Link, Outlet, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -8,7 +9,7 @@ const NAV = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
-export function SiteLayout() {
+export function SiteLayout({ children }: { children: ReactNode }) {
   const loc = useLocation();
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
