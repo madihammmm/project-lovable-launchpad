@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import heroBottle from "@/assets/dreamscents-hero.jpg";
 import { PerfumeCard } from "@/components/PerfumeCard";
 import { SiteLayout } from "@/components/SiteLayout";
-import { perfumes } from "@/server/perfumeStore";
+import { defaultPerfumes } from "@/lib/localPerfumes";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -64,7 +64,7 @@ function HomePage() {
           <Link to="/shop" className="text-sm font-bold text-primary hover:underline">View full shop →</Link>
         </div>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {perfumes.slice(0, 3).map((perfume) => <PerfumeCard key={perfume.id} perfume={perfume} />)}
+          {defaultPerfumes.slice(0, 3).map((perfume) => <PerfumeCard key={perfume.id} perfume={perfume} />)}
         </div>
       </section>
 
@@ -72,8 +72,8 @@ function HomePage() {
         <div className="grid gap-5 md:grid-cols-3">
           {[
             ["Dreamy curation", "Every scent is organized by mood, category, and luxury notes so shoppers can find their fantasy faster."],
-            ["Full-stack store", "Products load from REST APIs with create, update, delete, search, and contact form processing."],
-            ["Deployment ready", "Frontend is Vercel-ready, and a separate Express backend is included for Render or Railway."],
+            ["Local product storage", "Products can be created, edited, deleted, searched, and saved in the browser with localStorage."],
+            ["Vercel ready", "Deploy the frontend with default Vercel settings without needing a separate backend server."],
           ].map(([title, body]) => (
             <div key={title} className="rounded-2xl border border-border/70 bg-card/55 p-6 shadow-[var(--shadow-soft)] backdrop-blur-xl">
               <div className="mb-4 text-2xl">✧</div>
