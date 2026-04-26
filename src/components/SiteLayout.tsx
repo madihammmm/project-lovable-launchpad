@@ -50,7 +50,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       </header>
       <main className="relative z-10 flex-1">{children}</main>
       <footer className="relative z-10 border-t border-border/60 bg-background/60 px-4 py-8 text-center text-sm text-muted-foreground backdrop-blur">
-        © {new Date().getFullYear()} DreamScents · React + Vite frontend · Express/MongoDB backend ready
+        © {new Date().getFullYear()} DreamScents · React + Vite frontend · localStorage data
       </footer>
     </div>
   );
