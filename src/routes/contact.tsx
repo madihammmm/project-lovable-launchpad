@@ -5,10 +5,10 @@ import { SiteLayout } from "@/components/SiteLayout";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — FlowBoard" },
-      { name: "description", content: "Get in touch with the FlowBoard team." },
-      { property: "og:title", content: "Contact — FlowBoard" },
-      { property: "og:description", content: "Send a message to the FlowBoard team." },
+      { title: "Contact — DreamScents" },
+      { name: "description", content: "Send DreamScents a message through a backend contact API." },
+      { property: "og:title", content: "Contact — DreamScents" },
+      { property: "og:description", content: "Contact the dreamy perfume boutique." },
     ],
   }),
   component: ContactPage,
@@ -16,97 +16,54 @@ export const Route = createFileRoute("/contact")({
 
 function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [notice, setNotice] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    if (!form.name.trim() || !form.email.includes("@") || form.message.trim().length < 5) {
-      setError("Please fill all fields with a valid email and message (5+ chars).");
-      return;
-    }
-    // Persist as a task with the message — exercises POST /api/tasks
-    const r = await fetch("/api/tasks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: `Contact from ${form.name}`,
-        description: `${form.email}\n\n${form.message}`,
-        status: "todo",
-        priority: "medium",
-      }),
-    });
-    if (r.ok) {
-      setSent(true);
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    setSubmitting(true);
+    setNotice(null);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Message failed");
+      setNotice({ type: "success", text: "Your message floated into our inbox. Thank you!" });
       setForm({ name: "", email: "", message: "" });
-    } else {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      setNotice({ type: "error", text: err instanceof Error ? err.message : "Something went wrong" });
+    } finally {
+      setSubmitting(false);
     }
   }
 
   return (
     <SiteLayout>
-      <section className="mx-auto max-w-2xl px-4 py-20">
-        <h1 className="text-4xl font-bold tracking-tight">Contact us</h1>
-        <p className="mt-2 text-muted-foreground">
-          Have a question? Send us a note — it'll land on the team's board.
-        </p>
-
-        {sent ? (
-          <div
-            className="mt-8 rounded-2xl border border-border bg-card p-8 text-center"
-            style={{ boxShadow: "var(--shadow-soft)" }}
-          >
-            <h2 className="text-xl font-semibold">Thanks! 🎉</h2>
-            <p className="mt-2 text-muted-foreground">
-              Your message was added to the board. We'll be in touch.
-            </p>
-            <button
-              onClick={() => setSent(false)}
-              className="mt-4 rounded-md border border-border px-4 py-2 text-sm hover:bg-secondary"
-            >
-              Send another
-            </button>
+      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-12 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Contact</p>
+          <h1 className="mt-2 font-serif text-5xl font-bold">Send a scented note</h1>
+          <p className="mt-4 max-w-lg leading-7 text-muted-foreground">Questions about a perfume, order, or collaboration? The backend processes and stores every contact submission.</p>
+          <div className="mt-8 rounded-2xl border border-border/70 bg-card/55 p-6 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+            <p className="font-serif text-2xl font-bold">DreamScents Atelier</p>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">Pearl Avenue, Lavender District<br />hello@dreamscents.example</p>
           </div>
-        ) : (
-          <form
-            onSubmit={submit}
-            className="mt-8 grid gap-4 rounded-2xl border border-border bg-card p-6"
-            style={{ boxShadow: "var(--shadow-soft)" }}
-          >
-            <input
-              placeholder="Your name"
-              maxLength={100}
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
-            />
-            <input
-              type="email"
-              placeholder="you@example.com"
-              maxLength={200}
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
-            />
-            <textarea
-              placeholder="Your message"
-              maxLength={2000}
-              value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-              className="min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
-            />
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02]"
-              style={{ background: "var(--gradient-hero)" }}
-            >
-              Send message
-            </button>
-          </form>
-        )}
+        </div>
+
+        <form onSubmit={submit} className="rounded-3xl border border-border/70 bg-card/60 p-5 shadow-[var(--shadow-elegant)] backdrop-blur-xl md:p-8">
+          <div className="grid gap-4">
+            <label className="grid gap-2 text-sm font-semibold">Name<input required maxLength={100} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="form-input" /></label>
+            <label className="grid gap-2 text-sm font-semibold">Email<input required type="email" maxLength={200} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="form-input" /></label>
+            <label className="grid gap-2 text-sm font-semibold">Message<textarea required minLength={5} maxLength={1000} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="form-input min-h-36" /></label>
+          </div>
+          {notice && <p className={`mt-5 rounded-2xl border p-4 text-sm ${notice.type === "success" ? "border-primary/25 text-primary" : "border-destructive/30 text-destructive"}`}>{notice.text}</p>}
+          <button disabled={submitting} className="mt-6 w-full rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5 disabled:opacity-60">
+            {submitting ? "Sending..." : "Send message"}
+          </button>
+        </form>
       </section>
     </SiteLayout>
   );
