@@ -4,14 +4,10 @@ import { SiteLayout } from "@/components/SiteLayout";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — FlowBoard" },
-      {
-        name: "description",
-        content:
-          "FlowBoard is a full-stack demo: Express-style REST API, in-memory storage, and a responsive React frontend.",
-      },
-      { property: "og:title", content: "About — FlowBoard" },
-      { property: "og:description", content: "Full-stack task manager built with TanStack Start." },
+      { title: "About — DreamScents" },
+      { name: "description", content: "DreamScents assignment requirements, API routes, and deployment stack." },
+      { property: "og:title", content: "About — DreamScents" },
+      { property: "og:description", content: "A complete full-stack perfume website with CRUD and contact APIs." },
     ],
   }),
   component: AboutPage,
@@ -20,37 +16,23 @@ export const Route = createFileRoute("/about")({
 function AboutPage() {
   return (
     <SiteLayout>
-      <section className="mx-auto max-w-3xl px-4 py-20">
-        <h1 className="text-4xl font-bold tracking-tight">About FlowBoard</h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          FlowBoard is a complete full-stack demonstration project — built to show how a modern
-          web app combines a REST API, in-memory storage, and a polished React frontend.
-        </p>
-
-        <h2 className="mt-12 text-2xl font-semibold">Tech stack</h2>
-        <ul className="mt-4 space-y-2 text-muted-foreground">
-          <li>• <strong className="text-foreground">Backend:</strong> TanStack Start server routes (Express-style routing & middleware)</li>
-          <li>• <strong className="text-foreground">Storage:</strong> In-memory JavaScript store</li>
-          <li>• <strong className="text-foreground">Frontend:</strong> React 19 + Tailwind CSS</li>
-          <li>• <strong className="text-foreground">Routing:</strong> TanStack Router (file-based)</li>
-          <li>• <strong className="text-foreground">Deployment:</strong> One click via Lovable / Vercel-ready</li>
-        </ul>
-
-        <h2 className="mt-12 text-2xl font-semibold">REST API</h2>
-        <div className="mt-4 overflow-hidden rounded-xl border border-border bg-card font-mono text-sm">
+      <section className="mx-auto max-w-4xl px-4 py-12">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Project overview</p>
+        <h1 className="mt-2 font-serif text-5xl font-bold">DreamScents full-stack website</h1>
+        <p className="mt-4 text-lg leading-8 text-muted-foreground">Built for the assignment with a React frontend, REST APIs, in-memory runtime storage here, plus a separate Express + MongoDB Atlas backend package for Render or Railway deployment.</p>
+        <div className="mt-10 overflow-hidden rounded-2xl border border-border/70 bg-card/60 shadow-[var(--shadow-soft)] backdrop-blur-xl">
           {[
-            ["GET", "/api/tasks", "List all tasks"],
-            ["POST", "/api/tasks", "Create a new task"],
-            ["GET", "/api/tasks/:id", "Get one task"],
-            ["PUT", "/api/tasks/:id", "Update a task"],
-            ["DELETE", "/api/tasks/:id", "Delete a task"],
-          ].map(([m, p, d]) => (
-            <div key={p + m} className="flex items-center gap-4 border-b border-border px-4 py-3 last:border-0">
-              <span className="w-16 rounded bg-secondary px-2 py-0.5 text-center text-xs font-bold text-secondary-foreground">
-                {m}
-              </span>
-              <span className="font-semibold">{p}</span>
-              <span className="ml-auto text-muted-foreground">{d}</span>
+            ["GET", "/api/perfumes", "Fetch all perfumes"],
+            ["GET", "/api/perfumes/:id", "Fetch one perfume"],
+            ["POST", "/api/perfumes", "Add perfume"],
+            ["PUT", "/api/perfumes/:id", "Update perfume"],
+            ["DELETE", "/api/perfumes/:id", "Delete perfume"],
+            ["POST", "/api/contact", "Save contact submission"],
+          ].map(([method, path, desc]) => (
+            <div key={`${method}-${path}`} className="grid gap-2 border-b border-border/70 px-4 py-4 text-sm last:border-0 md:grid-cols-[90px_1fr_1.2fr]">
+              <span className="rounded-full bg-secondary px-3 py-1 text-center font-bold text-secondary-foreground">{method}</span>
+              <code className="font-semibold">{path}</code>
+              <span className="text-muted-foreground">{desc}</span>
             </div>
           ))}
         </div>

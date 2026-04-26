@@ -1,0 +1,102 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { SiteLayout } from "@/components/SiteLayout";
+import type { Perfume, PerfumeCategory } from "@/server/perfumeStore";
+import { categories } from "@/server/perfumeStore";
+
+export const Route = createFileRoute("/manage")({
+  head: () => ({
+    meta: [
+      { title: "Manage Perfumes — DreamScents" },
+      { name: "description", content: "Edit and delete DreamScents perfumes through PUT and DELETE APIs." },
+      { property: "og:title", content: "Manage Perfumes — DreamScents" },
+      { property: "og:description", content: "Full CRUD perfume management dashboard." },
+    ],
+  }),
+  component: ManagePage,
+});
+
+function ManagePage() {
+  const [perfumes, setPerfumes] = useState<Perfume[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Perfume>>({});
+  const [notice, setNotice] = useState<string | null>(null);
+
+  async function load() {
+    setLoading(true);
+    const response = await fetch("/api/perfumes");
+    const data = await response.json();
+    setPerfumes(data.perfumes ?? []);
+    setLoading(false);
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function save(id: string) {
+    const response = await fetch(`/api/perfumes/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editForm),
+    });
+    const data = await response.json();
+    setNotice(response.ok ? "Perfume updated successfully." : data.error || "Update failed.");
+    setEditingId(null);
+    setEditForm({});
+    load();
+  }
+
+  async function remove(id: string) {
+    if (!confirm("Delete this perfume?")) return;
+    const response = await fetch(`/api/perfumes/${id}`, { method: "DELETE" });
+    setNotice(response.ok ? "Perfume deleted." : "Delete failed.");
+    load();
+  }
+
+  return (
+    <SiteLayout>
+      <section className="mx-auto max-w-7xl px-4 py-12">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Admin management</p>
+        <h1 className="mt-2 font-serif text-5xl font-bold">Manage perfumes</h1>
+        <p className="mt-3 text-muted-foreground">Edit details with PUT requests or delete products with DELETE requests.</p>
+        {notice && <p className="mt-6 rounded-2xl border border-primary/25 bg-card/60 p-4 text-sm text-primary backdrop-blur">{notice}</p>}
+
+        <div className="mt-8 grid gap-4">
+          {loading ? <p className="text-muted-foreground">Loading perfumes...</p> : perfumes.map((perfume) => {
+            const editing = editingId === perfume.id;
+            return (
+              <article key={perfume.id} className="rounded-2xl border border-border/70 bg-card/60 p-5 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+                {editing ? (
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <input defaultValue={perfume.name} onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))} className="form-input" />
+                    <input defaultValue={perfume.brand} onChange={(e) => setEditForm((f) => ({ ...f, brand: e.target.value }))} className="form-input" />
+                    <input type="number" defaultValue={perfume.price} onChange={(e) => setEditForm((f) => ({ ...f, price: Number(e.target.value) }))} className="form-input" />
+                    <select defaultValue={perfume.category} onChange={(e) => setEditForm((f) => ({ ...f, category: e.target.value as PerfumeCategory }))} className="form-input">{categories.map((cat) => <option key={cat}>{cat}</option>)}</select>
+                    <input defaultValue={perfume.image} onChange={(e) => setEditForm((f) => ({ ...f, image: e.target.value }))} className="form-input md:col-span-2" />
+                    <textarea defaultValue={perfume.description} onChange={(e) => setEditForm((f) => ({ ...f, description: e.target.value }))} className="form-input min-h-24 md:col-span-2" />
+                    <div className="flex gap-2 md:col-span-2">
+                      <button onClick={() => save(perfume.id)} className="rounded-full bg-primary px-5 py-2 text-sm font-bold text-primary-foreground">Save</button>
+                      <button onClick={() => { setEditingId(null); setEditForm({}); }} className="rounded-full border border-border px-5 py-2 text-sm font-bold">Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <h2 className="font-serif text-2xl font-bold">{perfume.name}</h2>
+                      <p className="text-sm text-muted-foreground">{perfume.brand} · {perfume.category} · ${perfume.price}</p>
+                      <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{perfume.description}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => { setEditingId(perfume.id); setEditForm(perfume); }} className="rounded-full border border-border px-5 py-2 text-sm font-bold hover:bg-secondary">Edit</button>
+                      <button onClick={() => remove(perfume.id)} className="rounded-full border border-destructive/40 px-5 py-2 text-sm font-bold text-destructive hover:bg-destructive hover:text-destructive-foreground">Delete</button>
+                    </div>
+                  </div>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    </SiteLayout>
+  );
+}

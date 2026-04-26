@@ -9,21 +9,34 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as ShopRouteImport } from './routes/shop'
+import { Route as ManageRouteImport } from './routes/manage'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AddPerfumeRouteImport } from './routes/add-perfume'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiTasksRouteImport } from './routes/api/tasks'
-import { Route as ApiTasksIdRouteImport } from './routes/api/tasks.$id'
+import { Route as ApiPerfumesRouteImport } from './routes/api/perfumes'
+import { Route as ApiContactRouteImport } from './routes/api/contact'
+import { Route as ApiPerfumesIdRouteImport } from './routes/api/perfumes.$id'
 
-const TasksRoute = TasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManageRoute = ManageRouteImport.update({
+  id: '/manage',
+  path: '/manage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AddPerfumeRoute = AddPerfumeRouteImport.update({
+  id: '/add-perfume',
+  path: '/add-perfume',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -36,78 +49,117 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiTasksRoute = ApiTasksRouteImport.update({
-  id: '/api/tasks',
-  path: '/api/tasks',
+const ApiPerfumesRoute = ApiPerfumesRouteImport.update({
+  id: '/api/perfumes',
+  path: '/api/perfumes',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiTasksIdRoute = ApiTasksIdRouteImport.update({
+const ApiContactRoute = ApiContactRouteImport.update({
+  id: '/api/contact',
+  path: '/api/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPerfumesIdRoute = ApiPerfumesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => ApiTasksRoute,
+  getParentRoute: () => ApiPerfumesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/add-perfume': typeof AddPerfumeRoute
   '/contact': typeof ContactRoute
-  '/tasks': typeof TasksRoute
-  '/api/tasks': typeof ApiTasksRouteWithChildren
-  '/api/tasks/$id': typeof ApiTasksIdRoute
+  '/manage': typeof ManageRoute
+  '/shop': typeof ShopRoute
+  '/api/contact': typeof ApiContactRoute
+  '/api/perfumes': typeof ApiPerfumesRouteWithChildren
+  '/api/perfumes/$id': typeof ApiPerfumesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/add-perfume': typeof AddPerfumeRoute
   '/contact': typeof ContactRoute
-  '/tasks': typeof TasksRoute
-  '/api/tasks': typeof ApiTasksRouteWithChildren
-  '/api/tasks/$id': typeof ApiTasksIdRoute
+  '/manage': typeof ManageRoute
+  '/shop': typeof ShopRoute
+  '/api/contact': typeof ApiContactRoute
+  '/api/perfumes': typeof ApiPerfumesRouteWithChildren
+  '/api/perfumes/$id': typeof ApiPerfumesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/add-perfume': typeof AddPerfumeRoute
   '/contact': typeof ContactRoute
-  '/tasks': typeof TasksRoute
-  '/api/tasks': typeof ApiTasksRouteWithChildren
-  '/api/tasks/$id': typeof ApiTasksIdRoute
+  '/manage': typeof ManageRoute
+  '/shop': typeof ShopRoute
+  '/api/contact': typeof ApiContactRoute
+  '/api/perfumes': typeof ApiPerfumesRouteWithChildren
+  '/api/perfumes/$id': typeof ApiPerfumesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/add-perfume'
     | '/contact'
-    | '/tasks'
-    | '/api/tasks'
-    | '/api/tasks/$id'
+    | '/manage'
+    | '/shop'
+    | '/api/contact'
+    | '/api/perfumes'
+    | '/api/perfumes/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/contact' | '/tasks' | '/api/tasks' | '/api/tasks/$id'
+  to:
+    | '/'
+    | '/about'
+    | '/add-perfume'
+    | '/contact'
+    | '/manage'
+    | '/shop'
+    | '/api/contact'
+    | '/api/perfumes'
+    | '/api/perfumes/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/add-perfume'
     | '/contact'
-    | '/tasks'
-    | '/api/tasks'
-    | '/api/tasks/$id'
+    | '/manage'
+    | '/shop'
+    | '/api/contact'
+    | '/api/perfumes'
+    | '/api/perfumes/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AddPerfumeRoute: typeof AddPerfumeRoute
   ContactRoute: typeof ContactRoute
-  TasksRoute: typeof TasksRoute
-  ApiTasksRoute: typeof ApiTasksRouteWithChildren
+  ManageRoute: typeof ManageRoute
+  ShopRoute: typeof ShopRoute
+  ApiContactRoute: typeof ApiContactRoute
+  ApiPerfumesRoute: typeof ApiPerfumesRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/tasks': {
-      id: '/tasks'
-      path: '/tasks'
-      fullPath: '/tasks'
-      preLoaderRoute: typeof TasksRouteImport
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manage': {
+      id: '/manage'
+      path: '/manage'
+      fullPath: '/manage'
+      preLoaderRoute: typeof ManageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -115,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/add-perfume': {
+      id: '/add-perfume'
+      path: '/add-perfume'
+      fullPath: '/add-perfume'
+      preLoaderRoute: typeof AddPerfumeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -131,41 +190,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/tasks': {
-      id: '/api/tasks'
-      path: '/api/tasks'
-      fullPath: '/api/tasks'
-      preLoaderRoute: typeof ApiTasksRouteImport
+    '/api/perfumes': {
+      id: '/api/perfumes'
+      path: '/api/perfumes'
+      fullPath: '/api/perfumes'
+      preLoaderRoute: typeof ApiPerfumesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/tasks/$id': {
-      id: '/api/tasks/$id'
+    '/api/contact': {
+      id: '/api/contact'
+      path: '/api/contact'
+      fullPath: '/api/contact'
+      preLoaderRoute: typeof ApiContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/perfumes/$id': {
+      id: '/api/perfumes/$id'
       path: '/$id'
-      fullPath: '/api/tasks/$id'
-      preLoaderRoute: typeof ApiTasksIdRouteImport
-      parentRoute: typeof ApiTasksRoute
+      fullPath: '/api/perfumes/$id'
+      preLoaderRoute: typeof ApiPerfumesIdRouteImport
+      parentRoute: typeof ApiPerfumesRoute
     }
   }
 }
 
-interface ApiTasksRouteChildren {
-  ApiTasksIdRoute: typeof ApiTasksIdRoute
+interface ApiPerfumesRouteChildren {
+  ApiPerfumesIdRoute: typeof ApiPerfumesIdRoute
 }
 
-const ApiTasksRouteChildren: ApiTasksRouteChildren = {
-  ApiTasksIdRoute: ApiTasksIdRoute,
+const ApiPerfumesRouteChildren: ApiPerfumesRouteChildren = {
+  ApiPerfumesIdRoute: ApiPerfumesIdRoute,
 }
 
-const ApiTasksRouteWithChildren = ApiTasksRoute._addFileChildren(
-  ApiTasksRouteChildren,
+const ApiPerfumesRouteWithChildren = ApiPerfumesRoute._addFileChildren(
+  ApiPerfumesRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AddPerfumeRoute: AddPerfumeRoute,
   ContactRoute: ContactRoute,
-  TasksRoute: TasksRoute,
-  ApiTasksRoute: ApiTasksRouteWithChildren,
+  ManageRoute: ManageRoute,
+  ShopRoute: ShopRoute,
+  ApiContactRoute: ApiContactRoute,
+  ApiPerfumesRoute: ApiPerfumesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
