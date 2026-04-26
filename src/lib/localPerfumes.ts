@@ -61,7 +61,7 @@ export function validatePerfume(input: Partial<Perfume>) {
   const price = Number(input.price);
   if (!name || !brand || !description) return "Name, brand, and description are required.";
   if (!Number.isFinite(price) || price <= 0) return "Price must be a positive number.";
-  if (name.length > 120 || brand.length > 120 || description.length > 1000 || image.length > 1000) return "Some fields are too long.";
+  if (name.length > 120 || brand.length > 120 || description.length > 1000 || image.length > 5_000_000) return "Some fields are too long.";
   return null;
 }
 
@@ -81,7 +81,7 @@ export function createPerfume(input: Partial<Perfume>) {
     price: Number(input.price),
     category: normalizeCategory(input.category),
     description: String(input.description ?? "").trim().slice(0, 1000),
-    image: String(input.image ?? "").trim().slice(0, 1000),
+    image: String(input.image ?? "").trim(),
     createdAt: new Date().toISOString(),
   };
   write(PERFUMES_KEY, [perfume, ...perfumes]);
@@ -90,7 +90,7 @@ export function createPerfume(input: Partial<Perfume>) {
 
 export function updatePerfume(id: string, input: Partial<Perfume>) {
   const perfumes = listPerfumes();
-  const updated = perfumes.map((perfume) => perfume.id === id ? { ...perfume, ...input, price: Number(input.price ?? perfume.price), category: normalizeCategory(input.category ?? perfume.category) } : perfume);
+  const updated = perfumes.map((perfume) => perfume.id === id ? { ...perfume, ...input, image: String(input.image ?? perfume.image), price: Number(input.price ?? perfume.price), category: normalizeCategory(input.category ?? perfume.category) } : perfume);
   write(PERFUMES_KEY, updated);
   return updated.find((perfume) => perfume.id === id) ?? null;
 }
