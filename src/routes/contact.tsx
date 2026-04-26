@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
+import { createContact } from "@/lib/localPerfumes";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -24,13 +25,8 @@ function ContactPage() {
     setSubmitting(true);
     setNotice(null);
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Message failed");
+      const contact = createContact(form);
+      if (!contact) throw new Error("Valid name, email, and message are required.");
       setNotice({ type: "success", text: "Your message floated into our inbox. Thank you!" });
       setForm({ name: "", email: "", message: "" });
     } catch (err) {

@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import type { PerfumeCategory } from "@/server/perfumeStore";
-import { categories } from "@/server/perfumeStore";
+import type { PerfumeCategory } from "@/lib/localPerfumes";
+import { categories, createPerfume, validatePerfume } from "@/lib/localPerfumes";
 
 export const Route = createFileRoute("/add-perfume")({
   head: () => ({
@@ -28,13 +28,10 @@ function AddPerfumePage() {
     setSubmitting(true);
     setNotice(null);
     try {
-      const response = await fetch("/api/perfumes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, price: Number(form.price) }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Could not add perfume");
+      const payload = { ...form, price: Number(form.price) };
+      const error = validatePerfume(payload);
+      if (error) throw new Error(error);
+      createPerfume(payload);
       setNotice({ type: "success", text: "Perfume added successfully. It is now available in the shop." });
       setForm(initialForm);
     } catch (err) {

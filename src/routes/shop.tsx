@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { PerfumeCard } from "@/components/PerfumeCard";
 import { SiteLayout } from "@/components/SiteLayout";
-import type { Perfume, PerfumeCategory } from "@/server/perfumeStore";
-import { categories } from "@/server/perfumeStore";
+import type { Perfume, PerfumeCategory } from "@/lib/localPerfumes";
+import { categories, listPerfumes } from "@/lib/localPerfumes";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/shop")({
@@ -26,19 +26,13 @@ function ShopPage() {
   const [category, setCategory] = useState<"All" | PerfumeCategory>("All");
 
   useEffect(() => {
-    async function load() {
-      try {
-        const response = await fetch("/api/perfumes");
-        if (!response.ok) throw new Error("Could not load perfumes");
-        const data = await response.json();
-        setPerfumes(data.perfumes ?? []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
-      } finally {
-        setLoading(false);
-      }
+    try {
+      setPerfumes(listPerfumes());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-    load();
   }, []);
 
   const visible = useMemo(() => {

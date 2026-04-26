@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
-import type { Perfume, PerfumeCategory } from "@/server/perfumeStore";
-import { categories } from "@/server/perfumeStore";
+import type { Perfume, PerfumeCategory } from "@/lib/localPerfumes";
+import { categories, deletePerfume, listPerfumes, updatePerfume, validatePerfume } from "@/lib/localPerfumes";
 
 export const Route = createFileRoute("/manage")({
   head: () => ({
@@ -25,22 +25,19 @@ function ManagePage() {
 
   async function load() {
     setLoading(true);
-    const response = await fetch("/api/perfumes");
-    const data = await response.json();
-    setPerfumes(data.perfumes ?? []);
+    setPerfumes(listPerfumes());
     setLoading(false);
   }
 
   useEffect(() => { load(); }, []);
 
   async function save(id: string) {
-    const response = await fetch(`/api/perfumes/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editForm),
-    });
-    const data = await response.json();
-    setNotice(response.ok ? "Perfume updated successfully." : data.error || "Update failed.");
+    const error = validatePerfume(editForm as Perfume);
+    if (error) setNotice(error);
+    else {
+      updatePerfume(id, editForm);
+      setNotice("Perfume updated successfully.");
+    }
     setEditingId(null);
     setEditForm({});
     load();
@@ -48,8 +45,8 @@ function ManagePage() {
 
   async function remove(id: string) {
     if (!confirm("Delete this perfume?")) return;
-    const response = await fetch(`/api/perfumes/${id}`, { method: "DELETE" });
-    setNotice(response.ok ? "Perfume deleted." : "Delete failed.");
+    deletePerfume(id);
+    setNotice("Perfume deleted.");
     load();
   }
 

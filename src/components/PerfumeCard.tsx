@@ -1,5 +1,5 @@
 import heroBottle from "@/assets/dreamscents-hero.jpg";
-import type { Perfume } from "@/server/perfumeStore";
+import type { Perfume } from "@/lib/localPerfumes";
 
 export function PerfumeCard({ perfume }: { perfume: Perfume }) {
   const image = perfume.image || heroBottle;
