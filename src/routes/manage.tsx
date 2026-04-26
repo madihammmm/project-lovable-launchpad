@@ -64,7 +64,8 @@ function ManagePage() {
     if (!file) return;
     if (!file.type.startsWith("image/")) return setNotice("Please upload an image file.");
     if (file.size > 2_000_000) return setNotice("Image must be under 2MB for localStorage.");
-    setEditForm((form) => ({ ...form, image: await imageToDataUrl(file) }));
+    const image = await imageToDataUrl(file);
+    setEditForm((form) => ({ ...form, image }));
   }
 
   return (
