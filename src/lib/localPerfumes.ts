@@ -1,3 +1,9 @@
+import floralImage from "@/assets/perfume-card-floral.jpg";
+import freshImage from "@/assets/perfume-card-fresh.jpg";
+import luxuryImage from "@/assets/perfume-card-luxury.jpg";
+import oudImage from "@/assets/perfume-card-oud.jpg";
+import sweetImage from "@/assets/perfume-card-sweet.jpg";
+
 export type PerfumeCategory = "Floral" | "Oud" | "Fresh" | "Luxury" | "Sweet";
 
 export interface Perfume {
@@ -25,11 +31,11 @@ const CONTACTS_KEY = "dreamscents_contacts";
 export const categories: PerfumeCategory[] = ["Floral", "Oud", "Fresh", "Luxury", "Sweet"];
 
 export const defaultPerfumes: Perfume[] = [
-  { id: "moonlit-peony", name: "Moonlit Peony", brand: "DreamScents Atelier", price: 89, category: "Floral", description: "Velvet peony, white musk, and sugared rose wrapped in a soft lavender haze.", image: "", createdAt: "2026-01-01T00:00:00.000Z" },
-  { id: "royal-oud-veil", name: "Royal Oud Veil", brand: "Nocturne Maison", price: 145, category: "Oud", description: "A luminous oud blend with saffron, amber resin, and midnight vanilla.", image: "", createdAt: "2026-01-02T00:00:00.000Z" },
-  { id: "sky-mist-neroli", name: "Sky Mist Neroli", brand: "Aurelia Bloom", price: 72, category: "Fresh", description: "Airy neroli, pear blossom, and rain-kissed citrus for an effortless daytime aura.", image: "", createdAt: "2026-01-03T00:00:00.000Z" },
-  { id: "pearl-fantasy", name: "Pearl Fantasy", brand: "DreamScents Atelier", price: 168, category: "Luxury", description: "Iris powder, champagne petals, and creamy sandalwood with a couture finish.", image: "", createdAt: "2026-01-04T00:00:00.000Z" },
-  { id: "blush-macaron", name: "Blush Macaron", brand: "Sucre Lune", price: 64, category: "Sweet", description: "Raspberry cream, almond sugar, and vanilla cloud for a delicious romantic trail.", image: "", createdAt: "2026-01-05T00:00:00.000Z" },
+  { id: "moonlit-peony", name: "Moonlit Peony", brand: "DreamScents Atelier", price: 89, category: "Floral", description: "Velvet peony, white musk, and sugared rose wrapped in a soft lavender haze.", image: floralImage, createdAt: "2026-01-01T00:00:00.000Z" },
+  { id: "royal-oud-veil", name: "Royal Oud Veil", brand: "Nocturne Maison", price: 145, category: "Oud", description: "A luminous oud blend with saffron, amber resin, and midnight vanilla.", image: oudImage, createdAt: "2026-01-02T00:00:00.000Z" },
+  { id: "sky-mist-neroli", name: "Sky Mist Neroli", brand: "Aurelia Bloom", price: 72, category: "Fresh", description: "Airy neroli, pear blossom, and rain-kissed citrus for an effortless daytime aura.", image: freshImage, createdAt: "2026-01-03T00:00:00.000Z" },
+  { id: "pearl-fantasy", name: "Pearl Fantasy", brand: "DreamScents Atelier", price: 168, category: "Luxury", description: "Iris powder, champagne petals, and creamy sandalwood with a couture finish.", image: luxuryImage, createdAt: "2026-01-04T00:00:00.000Z" },
+  { id: "blush-macaron", name: "Blush Macaron", brand: "Sucre Lune", price: 64, category: "Sweet", description: "Raspberry cream, almond sugar, and vanilla cloud for a delicious romantic trail.", image: sweetImage, createdAt: "2026-01-05T00:00:00.000Z" },
 ];
 
 function read<T>(key: string, fallback: T): T {
@@ -55,7 +61,7 @@ export function validatePerfume(input: Partial<Perfume>) {
   const price = Number(input.price);
   if (!name || !brand || !description) return "Name, brand, and description are required.";
   if (!Number.isFinite(price) || price <= 0) return "Price must be a positive number.";
-  if (name.length > 120 || brand.length > 120 || description.length > 1000 || image.length > 1000) return "Some fields are too long.";
+  if (name.length > 120 || brand.length > 120 || description.length > 1000 || image.length > 5_000_000) return "Some fields are too long.";
   return null;
 }
 
@@ -75,7 +81,7 @@ export function createPerfume(input: Partial<Perfume>) {
     price: Number(input.price),
     category: normalizeCategory(input.category),
     description: String(input.description ?? "").trim().slice(0, 1000),
-    image: String(input.image ?? "").trim().slice(0, 1000),
+    image: String(input.image ?? "").trim(),
     createdAt: new Date().toISOString(),
   };
   write(PERFUMES_KEY, [perfume, ...perfumes]);
@@ -84,7 +90,7 @@ export function createPerfume(input: Partial<Perfume>) {
 
 export function updatePerfume(id: string, input: Partial<Perfume>) {
   const perfumes = listPerfumes();
-  const updated = perfumes.map((perfume) => perfume.id === id ? { ...perfume, ...input, price: Number(input.price ?? perfume.price), category: normalizeCategory(input.category ?? perfume.category) } : perfume);
+  const updated = perfumes.map((perfume) => perfume.id === id ? { ...perfume, ...input, image: String(input.image ?? perfume.image), price: Number(input.price ?? perfume.price), category: normalizeCategory(input.category ?? perfume.category) } : perfume);
   write(PERFUMES_KEY, updated);
   return updated.find((perfume) => perfume.id === id) ?? null;
 }
