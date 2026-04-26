@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { deletePerfume, findPerfume, updatePerfume, validatePerfume } from "../../server/perfumeStore";
 
-export const Route = createFileRoute("/api/perfumes/")({
+export const Route = createFileRoute("/api/perfumes/$id")({
   server: {
     handlers: {
       GET: async ({ params }) => {

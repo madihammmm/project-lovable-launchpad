@@ -17,8 +17,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPerfumesRouteImport } from './routes/api/perfumes'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
-import { Route as ApiTasksIdRouteImport } from './routes/api/tasks.$id'
-import { Route as ApiPerfumesRouteImport } from './routes/api/perfumes.'
+import { Route as ApiPerfumesIdRouteImport } from './routes/api/perfumes.$id'
 
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
@@ -60,14 +59,9 @@ const ApiContactRoute = ApiContactRouteImport.update({
   path: '/api/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiTasksIdRoute = ApiTasksIdRouteImport.update({
+const ApiPerfumesIdRoute = ApiPerfumesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => ApiTasksRoute,
-} as any)
-const ApiPerfumesRoute = ApiPerfumesRouteImport.update({
-  id: '/',
-  path: '/',
   getParentRoute: () => ApiPerfumesRoute,
 } as any)
 
@@ -80,8 +74,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRoute
   '/api/contact': typeof ApiContactRoute
   '/api/perfumes': typeof ApiPerfumesRouteWithChildren
-  '/api/perfumes/': typeof ApiPerfumesRoute
-  '/api/tasks/$id': typeof ApiTasksIdRoute
+  '/api/perfumes/$id': typeof ApiPerfumesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,8 +84,8 @@ export interface FileRoutesByTo {
   '/manage': typeof ManageRoute
   '/shop': typeof ShopRoute
   '/api/contact': typeof ApiContactRoute
-  '/api/perfumes': typeof ApiPerfumesRoute
-  '/api/tasks/$id': typeof ApiTasksIdRoute
+  '/api/perfumes': typeof ApiPerfumesRouteWithChildren
+  '/api/perfumes/$id': typeof ApiPerfumesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,8 +97,7 @@ export interface FileRoutesById {
   '/shop': typeof ShopRoute
   '/api/contact': typeof ApiContactRoute
   '/api/perfumes': typeof ApiPerfumesRouteWithChildren
-  '/api/perfumes/': typeof ApiPerfumesRoute
-  '/api/tasks/$id': typeof ApiTasksIdRoute
+  '/api/perfumes/$id': typeof ApiPerfumesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -118,8 +110,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/api/contact'
     | '/api/perfumes'
-    | '/api/perfumes/'
-    | '/api/tasks/$id'
+    | '/api/perfumes/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -130,7 +121,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/api/contact'
     | '/api/perfumes'
-    | '/api/tasks/$id'
+    | '/api/perfumes/$id'
   id:
     | '__root__'
     | '/'
@@ -141,8 +132,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/api/contact'
     | '/api/perfumes'
-    | '/api/perfumes/'
-    | '/api/tasks/$id'
+    | '/api/perfumes/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -214,29 +204,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/tasks/$id': {
-      id: '/api/tasks/$id'
+    '/api/perfumes/$id': {
+      id: '/api/perfumes/$id'
       path: '/$id'
-      fullPath: '/api/tasks/$id'
-      preLoaderRoute: typeof ApiTasksIdRouteImport
-      parentRoute: typeof ApiTasksRoute
-    }
-    '/api/perfumes/': {
-      id: '/api/perfumes/'
-      path: '/'
-      fullPath: '/api/perfumes/'
-      preLoaderRoute: typeof ApiPerfumesRouteImport
+      fullPath: '/api/perfumes/$id'
+      preLoaderRoute: typeof ApiPerfumesIdRouteImport
       parentRoute: typeof ApiPerfumesRoute
     }
   }
 }
 
 interface ApiPerfumesRouteChildren {
-  ApiPerfumesRoute: typeof ApiPerfumesRoute
+  ApiPerfumesIdRoute: typeof ApiPerfumesIdRoute
 }
 
 const ApiPerfumesRouteChildren: ApiPerfumesRouteChildren = {
-  ApiPerfumesRoute: ApiPerfumesRoute,
+  ApiPerfumesIdRoute: ApiPerfumesIdRoute,
 }
 
 const ApiPerfumesRouteWithChildren = ApiPerfumesRoute._addFileChildren(
