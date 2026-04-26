@@ -1,20 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import heroBottle from "@/assets/dreamscents-hero.jpg";
+import { PerfumeCard } from "@/components/PerfumeCard";
 import { SiteLayout } from "@/components/SiteLayout";
+import { perfumes } from "@/server/perfumeStore";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FlowBoard — Modern Task Manager" },
+      { title: "DreamScents — Luxury Perfume Boutique" },
       {
         name: "description",
-        content:
-          "FlowBoard is a fast, beautiful task manager. Organize your work with full CRUD, priorities, and statuses.",
+        content: "DreamScents is a dreamy full-stack perfume boutique with CRUD products, REST APIs, and responsive luxury UI.",
       },
-      { property: "og:title", content: "FlowBoard — Modern Task Manager" },
-      {
-        property: "og:description",
-        content: "Organize your work with a fast, beautiful task manager.",
-      },
+      { property: "og:title", content: "DreamScents — Where Fragrance Meets Fantasy" },
+      { property: "og:description", content: "Discover your signature scent in a romantic perfume boutique." },
     ],
   }),
   component: HomePage,
@@ -23,101 +22,63 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   return (
     <SiteLayout>
-      <section
-        className="relative overflow-hidden"
-        style={{ background: "var(--gradient-soft)" }}
-      >
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-24 md:grid-cols-2 md:items-center md:py-32">
-          <div>
-            <span className="inline-flex items-center rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground">
-              v1.0 · Live
-            </span>
-            <h1 className="mt-4 text-5xl font-extrabold tracking-tight md:text-6xl">
-              Organize work with{" "}
-              <span
-                className="bg-clip-text text-transparent"
-                style={{ backgroundImage: "var(--gradient-hero)" }}
-              >
-                effortless flow
-              </span>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-32 bg-[var(--mist-gradient)]" aria-hidden="true" />
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 md:grid-cols-[1fr_0.95fr] md:items-center md:py-20 lg:py-24">
+          <div className="relative z-10">
+            <p className="inline-flex rounded-full border border-primary/20 bg-card/60 px-4 py-2 text-sm font-semibold text-primary backdrop-blur">
+              DreamScents – Where Fragrance Meets Fantasy
+            </p>
+            <h1 className="mt-5 max-w-3xl font-serif text-5xl font-bold leading-tight md:text-7xl">
+              Discover Your Signature Scent
             </h1>
-            <p className="mt-5 max-w-lg text-lg text-muted-foreground">
-              FlowBoard is a clean, fast task manager with a full REST API backend. Create,
-              update, and ship — all from one delightful place.
+            <p className="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">
+              Step into a pastel dream of floral whispers, glowing oud, pearl mist, and romantic luxury perfumes crafted for unforgettable moments.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                to="/tasks"
-                className="inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02]"
-                style={{
-                  background: "var(--gradient-hero)",
-                  boxShadow: "var(--shadow-elegant)",
-                }}
-              >
-                Open the board →
+              <Link to="/shop" className="rounded-full bg-primary px-7 py-3 text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5">
+                Shop perfumes
               </Link>
-              <Link
-                to="/about"
-                className="inline-flex items-center justify-center rounded-md border border-border bg-background px-6 py-3 text-sm font-semibold hover:bg-secondary"
-              >
-                Learn more
+              <Link to="/add-perfume" className="rounded-full border border-border bg-card/70 px-7 py-3 text-sm font-bold backdrop-blur transition hover:-translate-y-0.5 hover:bg-secondary">
+                Add perfume
               </Link>
             </div>
           </div>
-          <div
-            className="relative rounded-3xl border border-border bg-card p-6"
-            style={{ boxShadow: "var(--shadow-elegant)" }}
-          >
-            <div className="space-y-3">
-              {[
-                { t: "Design landing hero", s: "done", c: "oklch(0.7 0.15 145)" },
-                { t: "Wire up REST API", s: "in-progress", c: "oklch(0.75 0.15 75)" },
-                { t: "Deploy to production", s: "todo", c: "oklch(0.62 0.18 28)" },
-              ].map((row) => (
-                <div
-                  key={row.t}
-                  className="flex items-center justify-between rounded-xl border border-border bg-background px-4 py-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="h-2.5 w-2.5 rounded-full"
-                      style={{ backgroundColor: row.c }}
-                    />
-                    <span className="font-medium">{row.t}</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">{row.s}</span>
-                </div>
-              ))}
+          <div className="relative min-h-[340px] overflow-hidden rounded-[2rem] border border-border/70 bg-card/50 shadow-[var(--shadow-elegant)] backdrop-blur-xl">
+            <img src={heroBottle} alt="DreamScents perfume bottle with pastel mist" width={1280} height={896} className="h-full min-h-[340px] w-full object-cover" />
+            <div className="absolute inset-0 bg-[var(--hero-veil)]" aria-hidden="true" />
+            <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-border/60 bg-card/60 p-4 backdrop-blur-xl">
+              <p className="font-serif text-2xl font-bold">Pearl Fantasy</p>
+              <p className="text-sm text-muted-foreground">Iris powder · champagne petals · creamy sandalwood</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-20">
-        <h2 className="text-3xl font-bold tracking-tight">Built for makers</h2>
-        <p className="mt-2 text-muted-foreground">Everything you need, nothing you don't.</p>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+      <section className="mx-auto max-w-7xl px-4 py-14">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Featured perfumes</p>
+            <h2 className="mt-2 font-serif text-4xl font-bold">Bestsellers in bloom</h2>
+          </div>
+          <Link to="/shop" className="text-sm font-bold text-primary hover:underline">View full shop →</Link>
+        </div>
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {perfumes.slice(0, 3).map((perfume) => <PerfumeCard key={perfume.id} perfume={perfume} />)}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14">
+        <div className="grid gap-5 md:grid-cols-3">
           {[
-            {
-              title: "Full CRUD",
-              body: "Create, read, update, and delete tasks via a clean REST API.",
-            },
-            {
-              title: "Express-style backend",
-              body: "Server routes power /api/tasks with proper status codes & validation.",
-            },
-            {
-              title: "Responsive UI",
-              body: "Looks gorgeous on phones, tablets, and ultrawides.",
-            },
-          ].map((f) => (
-            <div
-              key={f.title}
-              className="rounded-2xl border border-border bg-card p-6"
-              style={{ boxShadow: "var(--shadow-soft)" }}
-            >
-              <h3 className="text-lg font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{f.body}</p>
+            ["Dreamy curation", "Every scent is organized by mood, category, and luxury notes so shoppers can find their fantasy faster."],
+            ["Full-stack store", "Products load from REST APIs with create, update, delete, search, and contact form processing."],
+            ["Deployment ready", "Frontend is Vercel-ready, and a separate Express backend is included for Render or Railway."],
+          ].map(([title, body]) => (
+            <div key={title} className="rounded-2xl border border-border/70 bg-card/55 p-6 shadow-[var(--shadow-soft)] backdrop-blur-xl">
+              <div className="mb-4 text-2xl">✧</div>
+              <h3 className="font-serif text-2xl font-bold">{title}</h3>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{body}</p>
             </div>
           ))}
         </div>
